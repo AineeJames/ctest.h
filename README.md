@@ -23,4 +23,13 @@
         ASSERT(2 + 3 == 5);
     )
     ```
+4. Add entry point for tests:
+    ```c
+    RUN_TESTS();
+    ```
+5. Build and execute tests:
+    ```shell
+    gcc -o test test.c
+    ./test
+    ```
 
