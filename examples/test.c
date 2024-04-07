@@ -2,7 +2,7 @@
   ADD(should_fail) \
   ADD(should_pass)
 #define CTEST_IMPLEMENTATION
-#include "ctest.h"
+#include "../ctest.h"
 
 TEST(should_fail,
   int i = 10;

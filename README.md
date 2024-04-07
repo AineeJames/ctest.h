@@ -1,7 +1,7 @@
 # ctest.h - a simple single header testing library for C
 
 ## Usuage:
-1. Copy [ctests.h](https://github.com/AineeJames/ctest.h/blob/main/ctest.h) into your project.
+1. Copy [ctest.h](https://github.com/AineeJames/ctest.h/blob/main/ctest.h) into your project.
 2. Create a file called `test.c` and include the following contents at the top:
     ```c
     #define TESTS \
@@ -32,4 +32,18 @@
     gcc -o test test.c
     ./test
     ```
+
+## Example Output:
+```shell
+~/dev/c/ctest/examples (main*) » ./test
+INFO: Running a total of 2 tests.
+
+test.c:test_should_fail():9 Assertion of 'i == 11' failed!
+❌ Test should_fail failed 1 assertions!
+✅ Test should_pass passed.
+
+    Tests  1 failed | 1 passed (2)
+ Start at  16:56:26
+ Duration  0s
+```
 
