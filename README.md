@@ -1,7 +1,11 @@
 # ctest.h - a simple single header testing library for C
 
 ## 📝 Description:
-
+ctest.h is a simple, single-header C library designed to streamline unit testing for C
+projects. The library offers developers an efficient way to define and execute tests within the same environment
+(no need for overyly complicated build systems). Its header-only nature makes ctest.h exceptionally easy to
+integrate into any existing project, providing a straightforward and effective tool for ensuring code reliability
+and correctness.
 
 ## 🛠️ Usage:
 1. Copy [ctest.h](https://github.com/AineeJames/ctest.h/blob/main/ctest.h) into your project.
