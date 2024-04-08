@@ -16,14 +16,14 @@
 
 // ASSERTIONS
 #define ASSERT(condition)                                                      \
-  failed_assertions += !ctest_assert((condition), #condition, __FILE__,        \
-                                     __FUNCTION__, __LINE__, "")               \
+  failed_assertions += !ctest__assert((condition), #condition, __FILE__,       \
+                                      __FUNCTION__, __LINE__, "")              \
                            ? 1                                                 \
                            : 0
 #define ASSERT_MSG(condition, msg, ...)                                        \
   failed_assertions +=                                                         \
-      !ctest_assert((condition), #condition, __FILE__, __FUNCTION__, __LINE__, \
-                    msg, ##__VA_ARGS__)                                        \
+      !ctest__assert((condition), #condition, __FILE__, __FUNCTION__,          \
+                     __LINE__, msg, ##__VA_ARGS__)                             \
           ? 1                                                                  \
           : 0
 #define ASSERT_EQ(a, b) ASSERT((a) == (b))
@@ -34,18 +34,19 @@
 
 // TESTS
 #define TEST(name, ...)                                                        \
-  int test_##name(void) {                                                      \
+  static int test_##name(void) {                                               \
     int failed_assertions = 0;                                                 \
     __VA_ARGS__ return failed_assertions;                                      \
   }
 #define RUN_TESTS()                                                            \
-  int main(void) { return ctest_run_tests() ? 0 : 1; }
+  int main(void) { return ctest__run_tests() ? 0 : 1; }
 
-bool ctest_assert(bool result, const char *expression, const char *file,
-                  const char *test_name, const int line, const char *msg, ...);
-bool ctest_run_tests();
-char *ctest_get_timestamp(void);
-#define ADD(name) int test_##name(void);
+static bool ctest__assert(bool result, const char *expression, const char *file,
+                          const char *test_name, const int line,
+                          const char *msg, ...);
+static bool ctest__run_tests();
+static char *ctest__get_timestamp(void);
+#define ADD(name) static int test_##name(void);
 #ifdef TESTS
 TESTS
 #endif // !TESTS
@@ -54,8 +55,9 @@ TESTS
 // #define CTEST_IMPLEMENTATION
 #ifdef CTEST_IMPLEMENTATION
 
-bool ctest_assert(bool result, const char *expression, const char *file,
-                  const char *test_name, const int line, const char *msg, ...) {
+static bool ctest__assert(bool result, const char *expression, const char *file,
+                          const char *test_name, const int line,
+                          const char *msg, ...) {
   if (result) {
     return true;
   } else {
@@ -69,7 +71,7 @@ bool ctest_assert(bool result, const char *expression, const char *file,
   }
 }
 
-bool ctest_run_tests() {
+static bool ctest__run_tests() {
 #ifndef TESTS
 #define TESTS // Defined to omit useless warnings when compiling
   fprintf(stderr, "ERROR: No tests are defined!\n");
@@ -104,14 +106,14 @@ bool ctest_run_tests() {
   printf(GRY "    Tests  " RED "%d failed" GRY " | " GRN "%d passed" GRY
              " (%d)\n" RST,
          fail_test_count, pass_test_count, test_count);
-  printf(GRY " Start at  " RST "%s\n", ctest_get_timestamp());
+  printf(GRY " Start at  " RST "%s\n", ctest__get_timestamp());
   printf(GRY " Duration  " RST "%lds\n", end_time - start_time);
   if (fail_test_count > 0)
     return false;
   return true;
 }
 
-char *ctest_get_timestamp() {
+static char *ctest__get_timestamp() {
   time_t rawtime;
   struct tm *timeinfo;
 
