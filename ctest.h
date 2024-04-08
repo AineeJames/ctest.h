@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define GRY "\e[0;37m"
@@ -12,20 +13,33 @@
 #define GRN "\e[1;32m"
 #define RST "\e[0m"
 
+// ASSERTIONS
+#define ASSERT(condition)                                                      \
+  failed_assertions +=                                                         \
+      !_assert((condition), #condition, "", __FILE__, __FUNCTION__, __LINE__)  \
+          ? 1                                                                  \
+          : 0
+#define ASSERT_MSG(condition, msg)                                             \
+  failed_assertions +=                                                         \
+      !_assert((condition), #condition, msg, __FILE__, __FUNCTION__, __LINE__) \
+          ? 1                                                                  \
+          : 0
+#define ASSERT_EQ(a, b) ASSERT((a) == (b))
+#define ASSERT_EQ_MSG(a, b, msg) ASSERT_MSG((a) == (b), msg)
+#define ASSER_EQ_STR(a, b, msg) ASSERT(strcmp((a), (b)) == 0)
+#define ASSER_EQ_STR_MSG(a, b, msg) ASSERT_MSG(strcmp((a), (b)) == 0, msg)
+
+// TESTS
 #define TEST(name, ...)                                                        \
   int test_##name(void) {                                                      \
     int failed_assertions = 0;                                                 \
     __VA_ARGS__ return failed_assertions;                                      \
   }
-#define ASSERT(condition)                                                      \
-  failed_assertions +=                                                         \
-      !_assert((condition), #condition, __FILE__, __FUNCTION__, __LINE__) ? 1  \
-                                                                          : 0
 #define RUN_TESTS()                                                            \
   int main(void) { return _run_tests() ? 0 : 1; }
 
-bool _assert(bool result, const char *expression, const char *file,
-             const char *test_name, const int line);
+bool _assert(bool result, const char *expression, const char *msg,
+             const char *file, const char *test_name, const int line);
 bool _run_tests();
 char *_get_timestamp(void);
 #define ADD(name) int test_##name(void);
@@ -34,15 +48,16 @@ TESTS
 #endif // !TESTS
 #undef ADD
 
+// #define CTEST_IMPLEMENTATION
 #ifdef CTEST_IMPLEMENTATION
 
-bool _assert(bool result, const char *expression, const char *file,
-             const char *test_name, const int line) {
+bool _assert(bool result, const char *expression, const char *msg,
+             const char *file, const char *test_name, const int line) {
   if (result) {
     return true;
   } else {
-    fprintf(stderr, "%s:%s():%d Assertion of '%s' failed!\n", file, test_name,
-            line, expression);
+    fprintf(stderr, "%s:%s():%d: Assertion of '%s' failed: %s\n", file,
+            test_name, line, expression, msg);
     return false;
   }
 }
