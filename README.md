@@ -1,9 +1,9 @@
-# ctest.h - a simple single header testing library for C
+# ctest.h - a simple single-header testing library for c
 
 ## 📝 Description:
-ctest.h is a simple, single-header C library designed to streamline unit testing for C
-projects. The library offers developers an efficient way to define and execute tests within the same environment
-(no need for overyly complicated build systems). Its header-only nature makes ctest.h exceptionally easy to
+ctest.h is designed to streamline unit testing for C projects.
+The library offers developers an efficient way to define and execute tests within the same environment
+(no need for overly complicated build systems). Its header-only nature makes ctest.h exceptionally easy to
 integrate into any existing project, providing a straightforward and effective tool for ensuring code reliability
 and correctness.
 
@@ -16,14 +16,14 @@ and correctness.
         ADD(divide_30_by_10)  \
         ADD(check_names_equal)
     #define CTEST_IMPLEMENTATION
-    #include "../ctest.h"
+    #include "ctest.h"
     ```
 3. Define some functions to test (these have mistakes for demonstration purposes):
     ```c
     int multiply(int a, int b) { return a + b; }
     int divide(int a, int b) { return b / a; }
     ```
-4. Define `multiply_2_and_4`,`divide_30_by_10`, and `check_names_equal`:
+4. Define `multiply_2_and_4`, `divide_30_by_10`, and `check_names_equal`:
     ```c
     TEST(multiply_2_and_4, /* This test will FAIL */
         int result = multiply(2, 4);
