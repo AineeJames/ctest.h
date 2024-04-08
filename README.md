@@ -59,3 +59,16 @@ test.c:test_divide_30_by_10():23: Assertion of '(3) == (result)' failed: divide(
  Duration  0s
 ```
 
+## Available Macros:
+
+- `ASSERT(condition)`: Fails when `condition == false`.
+
+> [!NOTE]  
+> Adding `_MSG` to the end of any of the macros allows you to provide a message when the assertion occours.
+> Example:
+>   ```c
+>   ASSERT_EQ_STR_MSG("John", "Jane", "Names do not match!");
+>   /* or */
+>   int num = 3;
+>   ASSERT_EQ_MSG(2, num, "2 != %d", num);
+>   ```
