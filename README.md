@@ -1,33 +1,43 @@
 # ctest.h - a simple single header testing library for C
 
-## Usuage:
+## Usage:
 1. Copy [ctest.h](https://github.com/AineeJames/ctest.h/blob/main/ctest.h) into your project.
 2. Create a file called `test.c` and include the following contents at the top:
     ```c
     #define TESTS \
-        ADD(test_example_1) \
-        ADD(test_example_2)
+        ADD(multiply_2_and_4) \
+        ADD(divide_30_by_10)  \
+        ADD(check_names_equal)
     #define CTEST_IMPLEMENTATION
-    #include "ctest.h"
+    #include "../ctest.h"
     ```
-3. Define `test_example_1` and `test_example_2`:
+3. Define some functions to test (these have mistakes for demonstration purposes):
     ```c
-    // This test will fail
-    TEST(test_example_1,
-        int i = 1;
-        ASSERT(i == 10);
+    int multiply(int a, int b) { return a + b; }
+    int divide(int a, int b) { return b / a; }
+    ```
+4. Define `multiply_2_and_4`,`divide_30_by_10`, and `check_names_equal`:
+    ```c
+    TEST(multiply_2_and_4, /* This test will FAIL */
+        int result = multiply(2, 4);
+        ASSERT_EQ_MSG(8, result, "multiply(2, 4) returned %d!", result);
     )
 
-    // This test will pass
-    TEST(test_example_1,
-        ASSERT(2 + 3 == 5);
+    TEST(divide_30_by_10, /* This test will also FAIL */
+        int result = divide(30, 10);
+        ASSERT_EQ_MSG(3, result, "divide(30, 10) is not working!");
+    )
+
+    TEST(check_names_equal, /* This test will PASS */
+         const char* name = "John";
+         ASSERT_EQ_STR(name, "John");
     )
     ```
-4. Add entry point for tests:
+5. Add entry point for tests at the bottome of the file:
     ```c
     RUN_TESTS();
     ```
-5. Build and execute tests:
+6. Build and execute tests:
     ```shell
     gcc -o test test.c
     ./test
@@ -35,15 +45,17 @@
 
 ## Example Output:
 ```shell
-~/dev/c/ctest/examples (main*) » ./test
-INFO: Running a total of 2 tests.
+~/dev/c/ctest/examples (main) » ./test
+INFO: Running a total of 3 tests.
 
-test.c:test_should_fail():9 Assertion of 'i == 11' failed!
-❌ Test should_fail failed 1 assertions!
-✅ Test should_pass passed.
+test.c:test_multiply_2_and_4():18: Assertion of '(8) == (result)' failed: multiply(2, 4) returned 6!
+❌ Test multiply_2_and_4 failed 1 assertions!
+test.c:test_divide_30_by_10():23: Assertion of '(3) == (result)' failed: divide(30, 10) is not working!
+❌ Test divide_30_by_10 failed 1 assertions!
+✅ Test check_names_equal passed.
 
-    Tests  1 failed | 1 passed (2)
- Start at  16:56:26
+    Tests  2 failed | 1 passed (3)
+ Start at  15:32:47
  Duration  0s
 ```
 
