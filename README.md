@@ -1,6 +1,9 @@
 # ctest.h - a simple single header testing library for C
 
-## Usage:
+## 📝 Description:
+
+
+## 🛠️ Usage:
 1. Copy [ctest.h](https://github.com/AineeJames/ctest.h/blob/main/ctest.h) into your project.
 2. Create a file called `test.c` and include the following contents at the top:
     ```c
@@ -43,7 +46,7 @@
     ./test
     ```
 
-## Example Output:
+## 💻 Example Output:
 ```shell
 ~/dev/c/ctest/examples (main) » ./test
 INFO: Running a total of 3 tests.
@@ -59,16 +62,16 @@ test.c:test_divide_30_by_10():23: Assertion of '(3) == (result)' failed: divide(
  Duration  0s
 ```
 
-## Available Macros:
-
-- `ASSERT(condition)`: Fails when `condition == false`.
+## 📜 Available Macros:
+- `ASSERT(condition)`:   Fails when `condition == false`.
+- `ASSERT_EQ(a, b)`:     Fails when `a != b`.
+- `ASSERT_EQ_STR(a, b)`: Fails when `strcmp(a, b) != 0`.
 
 > [!NOTE]  
 > Adding `_MSG` to the end of any of the macros allows you to provide a message when the assertion occours.
-> Example:
->   ```c
->   ASSERT_EQ_STR_MSG("John", "Jane", "Names do not match!");
->   /* or */
->   int num = 3;
->   ASSERT_EQ_MSG(2, num, "2 != %d", num);
->   ```
+> ```c
+> ASSERT_EQ_STR_MSG("John", "Jane", "Names do not match!");
+> /* or */
+> int num = 3;
+> ASSERT_EQ_MSG(2, num, "2 != %d", num);
+> ```
