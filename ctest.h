@@ -1,6 +1,7 @@
 #ifndef CTEST_H
 #define CTEST_H
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,18 +17,19 @@
 // ASSERTIONS
 #define ASSERT(condition)                                                      \
   failed_assertions +=                                                         \
-      !_assert((condition), #condition, "", __FILE__, __FUNCTION__, __LINE__)  \
+      !_assert((condition), #condition, __FILE__, __FUNCTION__, __LINE__, "")  \
           ? 1                                                                  \
           : 0
-#define ASSERT_MSG(condition, msg)                                             \
-  failed_assertions +=                                                         \
-      !_assert((condition), #condition, msg, __FILE__, __FUNCTION__, __LINE__) \
-          ? 1                                                                  \
-          : 0
+#define ASSERT_MSG(condition, msg, ...)                                        \
+  failed_assertions += !_assert((condition), #condition, __FILE__,             \
+                                __FUNCTION__, __LINE__, msg, ##__VA_ARGS__)    \
+                           ? 1                                                 \
+                           : 0
 #define ASSERT_EQ(a, b) ASSERT((a) == (b))
-#define ASSERT_EQ_MSG(a, b, msg) ASSERT_MSG((a) == (b), msg)
-#define ASSER_EQ_STR(a, b, msg) ASSERT(strcmp((a), (b)) == 0)
-#define ASSER_EQ_STR_MSG(a, b, msg) ASSERT_MSG(strcmp((a), (b)) == 0, msg)
+#define ASSERT_EQ_MSG(a, b, msg, ...) ASSERT_MSG((a) == (b), msg, ##__VA_ARGS__)
+#define ASSERT_EQ_STR(a, b) ASSERT(strcmp((a), (b)) == 0)
+#define ASSERT_EQ_STR_MSG(a, b, msg, ...)                                      \
+  ASSERT_MSG(strcmp((a), (b)) == 0, msg, ##__VA_ARGS__)
 
 // TESTS
 #define TEST(name, ...)                                                        \
@@ -38,8 +40,8 @@
 #define RUN_TESTS()                                                            \
   int main(void) { return _run_tests() ? 0 : 1; }
 
-bool _assert(bool result, const char *expression, const char *msg,
-             const char *file, const char *test_name, const int line);
+bool _assert(bool result, const char *expression, const char *file,
+             const char *test_name, const int line, const char *msg, ...);
 bool _run_tests();
 char *_get_timestamp(void);
 #define ADD(name) int test_##name(void);
@@ -51,13 +53,17 @@ TESTS
 // #define CTEST_IMPLEMENTATION
 #ifdef CTEST_IMPLEMENTATION
 
-bool _assert(bool result, const char *expression, const char *msg,
-             const char *file, const char *test_name, const int line) {
+bool _assert(bool result, const char *expression, const char *file,
+             const char *test_name, const int line, const char *msg, ...) {
   if (result) {
     return true;
   } else {
-    fprintf(stderr, "%s:%s():%d: Assertion of '%s' failed: %s\n", file,
-            test_name, line, expression, msg);
+    fprintf(stderr, "%s:%s():%d: Assertion of '%s' failed: ", file, test_name,
+            line, expression);
+    va_list args;
+    va_start(args, msg);
+    vfprintf(stderr, msg, args);
+    fprintf(stderr, "\n");
     return false;
   }
 }
