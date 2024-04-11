@@ -1,9 +1,11 @@
-test: test.c
+test: clean test.c
 	gcc -Wall -Wextra -o test test.c
 
-run: test
+run: clean test
 	./test
 
 clean:
 	rm test
+
+all: test
 
