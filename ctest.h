@@ -61,7 +61,7 @@ static bool ctest__assert(bool result, const char *expression, const char *file,
   if (result) {
     return true;
   } else {
-    fprintf(stderr, "%s:%s():%d: Assertion of '%s' failed: ", file, test_name,
+    fprintf(stderr, "%s:%s:%d: Assertion of '%s' failed: ", file, test_name,
             line, expression);
     va_list args;
     va_start(args, msg);
