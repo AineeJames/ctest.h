@@ -8,11 +8,11 @@
 #include <string.h>
 #include <time.h>
 
-#define GRY "\e[0;37m"
-#define GRYB "\e[1;37m"
-#define RED "\e[1;31m"
-#define GRN "\e[1;32m"
-#define RST "\e[0m"
+#define CTEST_GRY "\e[0;37m"
+#define CTEST_GRYB "\e[1;37m"
+#define CTEST_RED "\e[1;31m"
+#define CTEST_GRN "\e[1;32m"
+#define CTEST_RST "\e[0m"
 
 // ASSERTIONS
 #define ASSERT(condition)                                                      \
@@ -82,7 +82,7 @@ static bool ctest__run_tests() {
 #define ADD(name) test_count++;
   TESTS
 #undef ADD
-  printf(GRY "INFO: Running a total of %d tests.\n\n", test_count);
+  printf(CTEST_GRY "INFO: Running a total of %d tests.\n\n", test_count);
 
   int fail_test_count = 0;
   int failed_assertions = 0;
@@ -91,11 +91,12 @@ static bool ctest__run_tests() {
 #define ADD(name)                                                              \
   failed_assertions = test_##name();                                           \
   if (failed_assertions > 0) {                                                 \
-    fprintf(stderr, "❌ Test " GRYB "%s" GRY " failed %d assertions!\n",       \
+    fprintf(stderr,                                                            \
+            "❌ Test " CTEST_GRYB "%s" CTEST_GRY " failed %d assertions!\n",   \
             #name, failed_assertions);                                         \
     fail_test_count++;                                                         \
   } else {                                                                     \
-    fprintf(stderr, "✅ Test " GRYB "%s" GRY " passed.\n", #name);             \
+    fprintf(stderr, "✅ Test " CTEST_GRYB "%s" CTEST_GRY " passed.\n", #name); \
   }
   TESTS
 #undef ADD
@@ -103,11 +104,11 @@ static bool ctest__run_tests() {
 
   printf("\n");
   int pass_test_count = test_count - fail_test_count;
-  printf(GRY "    Tests  " RED "%d failed" GRY " | " GRN "%d passed" GRY
-             " (%d)\n" RST,
+  printf(CTEST_GRY "    Tests  " CTEST_RED "%d failed" CTEST_GRY " | " CTEST_GRN
+                   "%d passed" CTEST_GRY " (%d)\n" CTEST_RST,
          fail_test_count, pass_test_count, test_count);
-  printf(GRY " Start at  " RST "%s\n", ctest__get_timestamp());
-  printf(GRY " Duration  " RST "%lds\n", end_time - start_time);
+  printf(CTEST_GRY " Start at  " CTEST_RST "%s\n", ctest__get_timestamp());
+  printf(CTEST_GRY " Duration  " CTEST_RST "%lds\n", end_time - start_time);
   if (fail_test_count > 0)
     return false;
   return true;
